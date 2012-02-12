@@ -92,6 +92,7 @@ struct pam_config {
     bool try_first_pass;        /* Try the previously entered password. */
     bool use_authtok;           /* Use the stored new password for changes. */
     bool use_first_pass;        /* Always use the previous password. */
+    int no_password;            /* don't prompt for password */
 
     /* Ticket caches. */
     char *ccache;               /* Path to write ticket cache to. */

@@ -684,7 +684,7 @@ pamk5_password_auth(struct pam_args *args, const char *service,
         goto done;
     }
     do {
-        if ((pass == NULL || *pass == '\0') && !args->config->try_pkinit) {
+        if ((pass == NULL || *pass == '\0') && !args->config->try_pkinit && !args->config->no_password) {
             const char *prompt = (service == NULL) ? NULL : "Current";
 
             retry = 0;

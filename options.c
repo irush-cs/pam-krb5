@@ -49,6 +49,7 @@ static const struct option options[] = {
     { K(keytab),             true,  STRING (NULL)  },
     { K(minimum_uid),        true,  NUMBER (0)     },
     { K(no_ccache),          false, BOOL   (false) },
+    { K(no_password),        true,  BOOL   (false) },
     { K(only_alt_auth),      true,  BOOL   (false) },
     { K(pkinit_anchors),     true,  STRING (NULL)  },
     { K(pkinit_prompt),      true,  BOOL   (false) },

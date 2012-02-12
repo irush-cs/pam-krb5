@@ -270,6 +270,15 @@ system account incorrectly authenticating as that system account.
 
 This option can be set in F<krb5.conf>.
 
+=item no_password
+
+Don't force a password prompt. Instead, let kerberos prompt for the
+password. This is useful when, e.g. a preauth is responsible for password
+prompting which otherwise will result with two password prompts.
+
+With this option the pam's authtok isn't set, which might cause some problems
+if any other pam module/function requires it.
+
 =item only_alt_auth
 
 This option is used with I<alt_auth_map> and forces the use of the mapped
