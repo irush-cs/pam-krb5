@@ -293,13 +293,18 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
         pam_prompts++;
     }
 
-    /* Call into the application conversation function. */
-    pamret = conv->conv(pam_prompts, (PAM_CONST struct pam_message **) msg,
-                        &resp, conv->appdata_ptr);
-    if (pamret != 0) 
-        goto cleanup;
-    if (resp == NULL)
-        goto cleanup;
+    /*
+     * Call into the application conversation function. If using
+     * prompt_first_pass, we might have no prompts at all.
+     */
+    if (pam_prompts > 0) {
+        pamret = conv->conv(pam_prompts, (PAM_CONST struct pam_message **) msg,
+                            &resp, conv->appdata_ptr);
+        if (pamret != 0)
+            goto cleanup;
+        if (resp == NULL)
+            goto cleanup;
+    }
 
     args->config->ctx->prompted_first_pass = 1;
     
@@ -324,8 +329,8 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
         if (len > prompts[0].reply->length)
             goto cleanup;
 
-        memcpy(prompts[i].reply->data, pass, len + 1);
-        prompts[i].reply->length = len;
+        memcpy(prompts[0].reply->data, pass, len + 1);
+        prompts[0].reply->length = len;
     }
     for (i = (pass != NULL); i < num_prompts; i++, pam_prompts++) {
         size_t len;
