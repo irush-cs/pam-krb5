@@ -365,7 +365,7 @@ cleanup:
      * them before we free them.
      */
     if (resp != NULL) {
-        for (i = 0; i < total_prompts; i++) {
+        for (i = 0; i < total_prompts - (pass != NULL); i++) {
             if (resp[i].resp != NULL) {
                 memset(resp[i].resp, 0, strlen(resp[i].resp));
                 free(resp[i].resp);
