@@ -638,6 +638,12 @@ This option is only applicable to the auth and password groups.  For the
 password group, it applies only to the old password.  See I<use_authtok>
 for a similar setting for the new password.
 
+=item prompt_first_pass
+
+Like I<try_first_pass>, but use the password as the answer to the first prompt
+question. Useful for arbitrary prompting from the kerberos (e.g. under some
+FAST protocols).
+
 =item prompt_principal
 
 Before prompting for the user's password (or using the previously entered

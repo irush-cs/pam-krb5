@@ -54,6 +54,7 @@ static const struct option options[] = {
     { K(pkinit_prompt),      true,  BOOL   (false) },
     { K(pkinit_user),        true,  STRING (NULL)  },
     { K(preauth_opt),        true,  LIST   (NULL)  },
+    { K(prompt_first_pass),  false, BOOL   (false) },
     { K(prompt_principal),   true,  BOOL   (false) },
     { K(renew_lifetime),     true,  TIME   (0)     },
     { K(retain_after_close), true,  BOOL   (false) },

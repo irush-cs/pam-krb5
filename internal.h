@@ -44,6 +44,8 @@ struct context {
     int dont_destroy_cache;     /* If set, don't destroy cache on shutdown. */
     int initialized;            /* If set, ticket cache initialized. */
     krb5_creds *creds;          /* Credentials for password changing. */
+    int prompted_first_pass;    /* If set, the first password was already
+                                   prompted */
 };
 
 /*
@@ -88,6 +90,8 @@ struct pam_config {
     char *banner;               /* Addition to password changing prompts. */
     bool expose_account;        /* Display principal in password prompts. */
     bool force_first_pass;      /* Require a previous password be stored. */
+    bool prompt_first_pass;     /* Use previously entered password as first
+                                   prompt response */
     bool prompt_principal;      /* Prompt for the Kerberos principal. */
     bool try_first_pass;        /* Try the previously entered password. */
     bool use_authtok;           /* Use the stored new password for changes. */

@@ -206,6 +206,7 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
     int total_prompts = num_prompts;
     int pam_prompts, pamret, i;
     int retval = KRB5KRB_ERR_GENERIC;
+    char *pass = NULL;
     struct pam_message **msg;
     struct pam_response *resp = NULL;
     struct pam_conv *conv;
@@ -274,6 +275,14 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
     }
     for (i = 0; i < num_prompts; i++) {
         int status;
+        
+        /* Skip first prompted if have authtok */
+        if (i == 0 && args->config->prompt_first_pass &&
+            !args->config->ctx->prompted_first_pass) {
+            pam_get_item(args->pamh, PAM_AUTHTOK, (PAM_CONST void **) &pass);
+            if (pass != NULL)
+                continue;
+        }
 
         status = asprintf((char **) &msg[pam_prompts]->msg, "%s: ",
                           prompts[i].prompt);
@@ -292,6 +301,8 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
     if (resp == NULL)
         goto cleanup;
 
+    args->config->ctx->prompted_first_pass = 1;
+    
     /*
      * Reuse pam_prompts as a starting index and copy the data into the reply
      * area of the krb5_prompt structs.
@@ -301,7 +312,22 @@ pamk5_prompter_krb5(krb5_context context UNUSED, void *data, const char *name,
         pam_prompts++;
     if (banner != NULL && !args->silent)
         pam_prompts++;
-    for (i = 0; i < num_prompts; i++, pam_prompts++) {
+    
+    /*
+     * If we have password from previous modules, we are in a prompt_first_pass
+     * mode, take it as the first reply
+     */    
+    if (pass != NULL) {
+        size_t len;
+
+        len = strlen(pass);
+        if (len > prompts[0].reply->length)
+            goto cleanup;
+
+        memcpy(prompts[i].reply->data, pass, len + 1);
+        prompts[i].reply->length = len;
+    }
+    for (i = (pass != NULL); i < num_prompts; i++, pam_prompts++) {
         size_t len;
 
         if (resp[pam_prompts].resp == NULL)

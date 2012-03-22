@@ -43,6 +43,7 @@ pamk5_context_new(struct pam_args *args)
     ctx->cache = NULL;
     ctx->princ = NULL;
     ctx->creds = NULL;
+    ctx->prompted_first_pass = 0;
     ctx->context = args->ctx;
     args->config->ctx = ctx;
 
